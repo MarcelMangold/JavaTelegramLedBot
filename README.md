@@ -7,4 +7,4 @@ Software: [Link to Adafruit python API](https://github.com/adafruit/Adafruit_Cir
 
 
 
-[Link to the pi Tutorial](https://tutorials-raspberrypi.de/raspberry-pi-ws2801-rgb-led-streifen-anschliessen-steuern/)
+[Link to the pi tutorial](https://tutorials-raspberrypi.de/raspberry-pi-ws2801-rgb-led-streifen-anschliessen-steuern/)
