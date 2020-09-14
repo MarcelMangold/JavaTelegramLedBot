@@ -6,17 +6,17 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-public class PropertyReader {
-	public enum PropertyType { BOT_TOKEN, BOT_USERNAME}
+class PropertyReader {
+	enum PropertyType { BOT_TOKEN, BOT_USERNAME}
 	
-	Properties prop = null;
+	var Properties prop = null;
 	
-	public PropertyReader() {
+	new() {
 		prop =   new Properties();
 		
-		String fileName = System.getProperty("user.dir") + "\\resources\\config\\config.properties";
+		val fileName = System.getProperty("user.dir") + "\\resources\\config\\config.properties";
 		System.out.println(fileName);
-		InputStream is = null;
+		var InputStream is = null;
 		try {
 		    is = new FileInputStream(fileName);
 		    prop.load(is);
@@ -29,20 +29,16 @@ public class PropertyReader {
 		
 	}
 	
-	public String getProperty(PropertyType property){
+	def String getProperty(PropertyType property){
 		return prop.getProperty(getPropertyValue(property));
 	}
 	
-	private String getPropertyValue(PropertyType property) {
+	private def String getPropertyValue(PropertyType property) {
 		switch(property) {
-			case BOT_TOKEN : 
-				return "bot_token";
-			case BOT_USERNAME : 
-				return "bot_username";
-			default : 
-				return null;
+			case BOT_TOKEN : "bot_token"
+			case BOT_USERNAME : "bot_username"
+			default : null
 		}
 	}
-	
 
 }
