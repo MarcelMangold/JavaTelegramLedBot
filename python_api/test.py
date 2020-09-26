@@ -14,6 +14,10 @@ PIXEL_COUNT = 32
 SPI_PORT   = 0
 SPI_DEVICE = 0
 pixels = Adafruit_WS2801.WS2801Pixels(PIXEL_COUNT, spi=SPI.SpiDev(SPI_PORT, SPI_DEVICE), gpio=GPIO)
+
+def changeColor(color):
+    pixels.set_pixel(k, Adafruit_WS2801.RGB_to_color( color[0], color[1], color[2] ))
+
  
  
 # Define the wheel function to interpolate between different hues.

@@ -11,6 +11,8 @@ import org.telegram.telegrambots.meta.api.objects.Update
 import static org.telegram.abilitybots.api.objects.Flag.*
 import static org.telegram.abilitybots.api.objects.Locality.*
 import static org.telegram.abilitybots.api.objects.Privacy.*
+import com.mysticalducks.bot.led.util.Client
+import com.mysticalducks.bot.led.util.KeyboardFactory.LedButtonsType
 
 class Bot extends AbilityBot {
 	
@@ -53,18 +55,24 @@ class Bot extends AbilityBot {
 			]
 			.reply (
 				[upd |
-              		// Prints to console
-              		System.out.println("I'm in a reply!");
-             		// Sends message
-              		silent.send(
-					'''test
-					''', upd.callbackQuery.message.chat.id)
+					val color = upd.callbackQuery.data
+					try {
+						Client.sendMessage(color.hexColor)
+             			// Sends message
+              			silent.send(
+						'''Farbe erfolgreich in «color» gewechselt.
+						''', upd.callbackQuery.message.chat.id)
+					} catch (Exception e) {
+						silent.send(
+							'''Die Farbe konnte nicht gewechselt werden. Es gab Probleme bei der Socketverbindung.''',
+							upd.callbackQuery.message.chat.id
+						)
+					}
+              	
             		
             	],
             	CALLBACK_QUERY,
-            	
-//            	isReplyToBot,
-            	hasMessageWith("blau")
+            	isColorCode()
             )
 			.build
 	}
@@ -78,7 +86,7 @@ class Bot extends AbilityBot {
 			.input(0)
 			.action[ ctx |
 				sender.execute(new SendMessage()
-					.setText("as")
+					.setText("Leds erfolgreich ausgeschaltet.")
                     .setChatId(ctx.chatId)
                     .setReplyMarkup(KeyboardFactory.ledButtons) )
 			].build
@@ -91,10 +99,36 @@ class Bot extends AbilityBot {
 				upd.callbackQuery.data.equals(msg)
         ];
     }
+    
+    @NotNull
+    private def Predicate<Update> isColorCode() {
+        return [upd | 
+        		_isColorCode(upd.callbackQuery.data)
+        ];
+    }
+    
+    private def _isColorCode(String color) {
+    	for(type : LedButtonsType.values){
+    		if(KeyboardFactory.getLedButton(type) == color)
+    			return true
+    	}
+    	return false
+    }
 
 
 	override creatorId() {
 		return 123
+	}
+	
+	private def String getHexColor(String color) {
+		switch(color) {
+			case KeyboardFactory.getLedButton(LedButtonsType.BLUE) 		: "255,0,255"
+			case KeyboardFactory.getLedButton(LedButtonsType.GREEN) 	: "255,15,15"
+			case KeyboardFactory.getLedButton(LedButtonsType.WHITE) 	: "255,255,255"
+			default: "255,255,255"
+		}
+			 
+			
 	}
 
 }
