@@ -13,30 +13,28 @@ class Client {
 	def static void sendMessage(String message) {
 		var Socket socket = null;
 		try { 
-           	socket = new Socket("localhost", 5002); 
+           	socket = new Socket("192.168.178.107", 5002); 
 
             val outputStream = socket.getOutputStream(); 
             val ps = new PrintStream(outputStream, true); 
             ps.println(message); 
 
-            val InputStream inputStream = socket.getInputStream(); 
-            val buff = new BufferedReader(new InputStreamReader(inputStream)); 
-             
-            while (buff.ready()) { 
-//            	val line = buff.readLine()
-//            	if(line == 1){
-//            		throw new RuntimeException("Error in led api..")
-//            	}
-                System.out.println("ReadedLine" + buff.readLine()); 
-            } 
-            
-
+            val InputStream input = socket.getInputStream(); 
+            val reader = new BufferedReader(new InputStreamReader(input));
+            var String line;
+ 
+            while ((line = reader.readLine()) !== null) {
+                if(line == "1"){
+	            	throw new RuntimeException("Error in led api..")
+            	}
+            }
         } catch (UnknownHostException e) { 
             System.out.println("Unknown Host..."); 
             e.printStackTrace(); 
         } catch (IOException e) { 
             System.out.println("IOProbleme..."); 
             e.printStackTrace(); 
+            throw new RuntimeException("Error in led api..")
         } finally { 
             if (socket !== null) 
                 try { 
@@ -48,5 +46,4 @@ class Client {
                 } 
         } 
 	}
-	
 }

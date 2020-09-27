@@ -49,7 +49,7 @@ class Bot extends AbilityBot {
 			.action[ ctx |
 				
 				sender.execute(new SendMessage()
-					.setText("as")
+					.setText("Bitte wähle eine der Farben aus:")
                     .setChatId(ctx.chatId)
                     .setReplyMarkup(KeyboardFactory.ledButtons) )
 			]
@@ -58,7 +58,6 @@ class Bot extends AbilityBot {
 					val color = upd.callbackQuery.data
 					try {
 						Client.sendMessage(color.hexColor)
-             			// Sends message
               			silent.send(
 						'''Farbe erfolgreich in «color» gewechselt.
 						''', upd.callbackQuery.message.chat.id)
@@ -68,8 +67,6 @@ class Bot extends AbilityBot {
 							upd.callbackQuery.message.chat.id
 						)
 					}
-              	
-            		
             	],
             	CALLBACK_QUERY,
             	isColorCode()
@@ -85,10 +82,21 @@ class Bot extends AbilityBot {
         	.locality(ALL) 
 			.input(0)
 			.action[ ctx |
-				sender.execute(new SendMessage()
-					.setText("Leds erfolgreich ausgeschaltet.")
-                    .setChatId(ctx.chatId)
-                    .setReplyMarkup(KeyboardFactory.ledButtons) )
+				try {
+					Client.sendMessage("off")
+              		silent.send(
+						'''
+						LED's erfolgreich ausgeschaltet.
+						''', ctx.chatId)
+					} catch (Exception e) {
+						silent.send(
+							'''
+							Die Led's konnten nicht ausgeschaltet werden.
+							Es gab Probleme bei der Socketverbindung.
+							''',
+							ctx.chatId
+						)
+					}
 			].build
 	}
 	
@@ -122,8 +130,8 @@ class Bot extends AbilityBot {
 	
 	private def String getHexColor(String color) {
 		switch(color) {
-			case KeyboardFactory.getLedButton(LedButtonsType.BLUE) 		: "255,0,255"
-			case KeyboardFactory.getLedButton(LedButtonsType.GREEN) 	: "255,15,15"
+			case KeyboardFactory.getLedButton(LedButtonsType.BLUE) 		: "255,000,255"
+			case KeyboardFactory.getLedButton(LedButtonsType.GREEN) 	: "255,115,115"
 			case KeyboardFactory.getLedButton(LedButtonsType.WHITE) 	: "255,255,255"
 			default: "255,255,255"
 		}
