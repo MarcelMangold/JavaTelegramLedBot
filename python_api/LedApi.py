@@ -8,7 +8,7 @@ import Adafruit_GPIO.SPI as SPI
  
  
 # Configure the count of pixels:
-PIXEL_COUNT = 32
+PIXEL_COUNT = 164
  
 # Alternatively specify a hardware SPI connection on /dev/spidev0.0:
 SPI_PORT   = 0
@@ -48,7 +48,7 @@ def rainbow_cycle_successive(pixels, wait=0.1):
         if wait > 0:
             time.sleep(wait)
  
-def rainbow_cycle(pixels, wait=0.005):
+def rainbow_cycle(wait=0.01):
     for j in range(256): # one cycle of all 256 colors in the wheel
         for i in range(pixels.count()):
             pixels.set_pixel(i, wheel(((i * 256 // pixels.count()) + j) % 256) )
@@ -105,24 +105,25 @@ def appear_from_back(pixels, color=(255, 0, 0)):
             
  
 if __name__ == "__main__":
+    print("LED an..")
     # Clear all the pixels to turn them off.
     pixels.clear()
     pixels.show()  # Make sure to call show() after changing any pixels!
  
-    rainbow_cycle_successive(pixels, wait=0.1)
-    rainbow_cycle(pixels, wait=0.01)
+    #rainbow_cycle_successive(pixels, wait=0.1)
+    rainbow_cycle(wait=0.1)
  
-    brightness_decrease(pixels)
+    #brightness_decrease(pixels)
     
-    appear_from_back(pixels)
+    #appear_from_back(pixels)
     
-    for i in range(3):
-        blink_color(pixels, blink_times = 1, color=(255, 0, 0))
-        blink_color(pixels, blink_times = 1, color=(0, 255, 0))
-        blink_color(pixels, blink_times = 1, color=(0, 0, 255))
+    #for i in range(3):
+     #   blink_color(pixels, blink_times = 1, color=(255, 0, 0))
+      #  blink_color(pixels, blink_times = 1, color=(0, 255, 0))
+       # blink_color(pixels, blink_times = 1, color=(0, 0, 255))
  
     
     
-    rainbow_colors(pixels)
+    #rainbow_colors(pixels)
     
-    brightness_decrease(pixels)
+    #brightness_decrease(pixels)

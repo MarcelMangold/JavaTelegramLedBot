@@ -13,7 +13,7 @@ server_address = (server_name, 5002)
 print('starting up on {} port {}'.format(*server_address))
 sock.bind(server_address)
 sock.listen(1)
-colorRegex = re.compile(r"\d{3},\d{3},\d{3}")
+colorRegex = re.compile(r"\d{1,3},\d{1,3},\d{1,3}")
 while True:
     print('waiting for a connection')
     connection, client_address = sock.accept()
@@ -30,9 +30,12 @@ while True:
             elif (data.decode("UTF-8") == "off"):
                 api.setLedsOff()
                 connection.send(b"0")
+            elif (data.decode("UTF-8") == "rainbow"):
+                api.rainbow_cycle( wait=0.1)
+                connection.send(b"0")
             else:
                 connection.send(b"1")         
-    except:
-           connection.send(b"1")
+   # except:
+    #       connection.send(b"1")
     finally:
         connection.close()
