@@ -3,6 +3,7 @@ import socket
 import sys
 import re
 import time
+import LedApi as api
 
 # Create a TCP/IP socket
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -18,18 +19,20 @@ while True:
     connection, client_address = sock.accept()
     try:
         print('client connected:', client_address)
-        while True:
-            data = connection.recv(64)
-            print('received {!r}'.format(data))
-            if data: 
-                
-                if ( colorRegex.match(data.decode("UTF-8")) ):
-                    color = data.split(",")
-                    connection.send(b"0")
-                else:
-                    connection.send(b"1")
-                    
+        data = connection.recv(64)
+        print('received {!r}'.format(data))
+        if data: 
+            if (colorRegex.match(data.decode("UTF-8")) ):
+                colorString = data.split(",")
+                colorInt = [int(numeric_string) for numeric_string in colorString]
+                api.changeColor(colorInt)
+                connection.send(b"0")
+            elif (data.decode("UTF-8") == "off"):
+                api.setLedsOff()
+                connection.send(b"0")
             else:
-                break
+                connection.send(b"1")         
+    except:
+           connection.send(b"1")
     finally:
         connection.close()
