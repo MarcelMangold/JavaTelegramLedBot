@@ -1,26 +1,35 @@
 
 import socket
+import sys
 import re
+import time
 
-HOST = 'localhost'                 # Symbolic name meaning all available interfaces
-PORT = 50007              # Arbitrary non-privileged port
-s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-s.bind((HOST, PORT))
-s.listen(1)
-conn, addr = s.accept()
-print 'Connected by', addr
-colorRegex = re.compile('\d{3},\d{3},\d{3}')
+# Create a TCP/IP socket
+sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-
-
-while 1:
-    data = conn.recv(1024)
-    if ( colorRegex.match(data) ):
-         color = data.split(",")
-         conn.sendall("0")
-    else:
-        conn.sendall("1")
-        
-    if not data: break
-    conn.sendall(data)
-conn.close()
+server_name = 'localhost'
+server_address = (server_name, 5002)
+print('starting up on {} port {}'.format(*server_address))
+sock.bind(server_address)
+sock.listen(1)
+colorRegex = re.compile(r"\d{3},\d{3},\d{3}")
+while True:
+    print('waiting for a connection')
+    connection, client_address = sock.accept()
+    try:
+        print('client connected:', client_address)
+        while True:
+            data = connection.recv(64)
+            print('received {!r}'.format(data))
+            if data: 
+                
+                if ( colorRegex.match(data.decode("UTF-8")) ):
+                    color = data.split(",")
+                    connection.send(b"0")
+                else:
+                    connection.send(b"1")
+                    
+            else:
+                break
+    finally:
+        connection.close()

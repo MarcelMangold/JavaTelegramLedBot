@@ -13,7 +13,7 @@ class Client {
 	def static void sendMessage(String message) {
 		var Socket socket = null;
 		try { 
-           	socket = new Socket("localhost", 50007); 
+           	socket = new Socket("localhost", 5002); 
 
             val outputStream = socket.getOutputStream(); 
             val ps = new PrintStream(outputStream, true); 
@@ -23,11 +23,11 @@ class Client {
             val buff = new BufferedReader(new InputStreamReader(inputStream)); 
              
             while (buff.ready()) { 
-            	val line = buff.readLine()
-            	if(line == 1){
-            		throw new RuntimeException("Error in led api..")
-            	}
-                System.out.println(buff.readLine()); 
+//            	val line = buff.readLine()
+//            	if(line == 1){
+//            		throw new RuntimeException("Error in led api..")
+//            	}
+                System.out.println("ReadedLine" + buff.readLine()); 
             } 
             
 
